@@ -34,36 +34,57 @@ namespace BloodBankManagementSystem.UI
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            //Write the Code to Login our Application
-            //1. Get the username and password from login form
-            l.username = txtUsername.Text;
-            l.password = txtPassword.Text;
-
-            //Check the Login Credentials
-            bool isSuccess = dal.loginCheck(l);
-
-            //Check whehter the login is success or not
-            //If login is success then isSuccess will be true else it will be false
-            if(isSuccess==true)
+            //try and catch block for error handling_defensive programming _my work
+            try
             {
-                //Login Success
-                //Display Success Message
-                MessageBox.Show("Login Successful.");
+                //input validation_defensive programming _my work
+                string username = txtUsername.Text.Trim();
+                string password = txtPassword.Text;
 
-                //Save the username in loggedInuser Stattic MEthod
-                loggedInUser = l.username;
+                if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+                {
+                    MessageBox.Show("Please enter a valid username and password.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-                //Display home Form
-                frmHome home = new frmHome();
-                home.Show();
-                this.Hide(); //To CLose Login Form
+
+
+                //1. Get the username and password from login form
+                l.username = txtUsername.Text;
+                l.password = txtPassword.Text;
+
+                //Check the Login Credentials
+                bool isSuccess = dal.loginCheck(l);
+
+                //Check whether the login is success or not
+                //If login is success then isSuccess will be true else it will be false
+                if (isSuccess == true)
+                {
+                    //Login Success
+                    //Display Success Message
+                    MessageBox.Show("Login Successful.");
+
+                    //Save the username in loggedInuser Stattic MEthod
+                    loggedInUser = l.username;
+
+                    //Display home Form
+                    frmHome home = new frmHome();
+                    home.Show();
+                    this.Hide(); //To CLose Login Form
+                }
+                else
+                {
+                    //Login Failed
+                    //Display the Error Message
+                    MessageBox.Show("Login Failed. Try Again.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                //Login Failed
-                //Display the Error Message
-                MessageBox.Show("Login Failed. Try Again.");
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+
         }
     }
 }
